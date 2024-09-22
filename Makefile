@@ -53,8 +53,6 @@ SUNZIP_DIR:=sunzip
 ZIPFLOW_DIR:=zipflow
 ###################################
 
-
-
 all:
 	$(MAKE) -C $(PAGE_DIR) all
 	$(MAKE) -C $(ZLIB_DIR)  all
@@ -70,6 +68,12 @@ clean:
 	$(MAKE) -C $(ZIPFLOW_DIR) clean
 	-rm $(APP)
 	-rm $(LIB)
+	-rm -rd jail
 
+test:
+	mkdir -p  jail
+	cp $(APP) jail
+	touch jail/itworks.txt
+	firejail --private=jail ./$(APP)
 
 .SILENT: clean
