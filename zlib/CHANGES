@@ -1,0 +1,4 @@
+zlib code in this repo have changes for this project
+
+* in zutil.c delete header include gzguts.h
+* maybe other changes, i dont know

@@ -13,6 +13,8 @@ static int memcmp(const void* buf1,
     return(*((unsigned char*)buf1) - *((unsigned char*)buf2));
 }
 
+#include <unistd.h>
+
 //#define memcmp __builtin_memcmp
 #define va_list __builtin_va_list
 //#define __NR_accept 43
@@ -44,7 +46,7 @@ static __attribute__((hot)) int strncasecmp(const char *s1, const char *s2, long
 //  write(1, s1, strlen(s1));
 ///  write(1, "\n", 1);
 ///  write(1, s2, strlen(s2));
-///  write(1, "\n", 1);  
+///  write(1, "\n", 1);
   while (n-- != 0 && tolower(*s1) == tolower(*s2))
     {
       if (n == 0 || *s1 == '\0' || *s2 == '\0')
@@ -103,7 +105,7 @@ typedef void* FILE;
 #ifndef fork
 #define fork()  clone( NULL, NULL, 17, NULL, NULL, NULL, NULL )
 #endif
-#ifndef NO_LOG
+#ifdef  ENABLE_LOG
 #define PrintWrap(...) PB_PrintString( &global_printbuf, __VA_ARGS__);write(1,global_printbuf_buffer, global_printbuf.pos);global_printbuf.pos = 0;
 #define puts(x) write(1, (const char*)x, strlen(x))
 #else
@@ -124,12 +126,12 @@ typedef void* FILE;
 static int atoi(const char *s) {
     int acum = 0;
     int factor = 1;
-    
+
     if(*s == '-') {
         factor = -1;
         s++;
     }
-    
+
     while((*s >= '0')&&(*s <= '9')) {
       acum = acum * 10;
       acum = acum + (*s - 48);
@@ -333,16 +335,4 @@ static struct tm tm_stub;
 #define localtime(...) &tm_stub
 #define assert(x) if(!(x))puts(#x),_exit(127);
 
-char * const z_errmsg[10] = {
-    (char *)"need dictionary",     /* Z_NEED_DICT       2  */
-    (char *)"stream end",          /* Z_STREAM_END      1  */
-    (char *)"",                    /* Z_OK              0  */
-    (char *)"file error",          /* Z_ERRNO         (-1) */
-    (char *)"stream error",        /* Z_STREAM_ERROR  (-2) */
-    (char *)"data error",          /* Z_DATA_ERROR    (-3) */
-    (char *)"insufficient memory", /* Z_MEM_ERROR     (-4) */
-    (char *)"buffer error",        /* Z_BUF_ERROR     (-5) */
-    (char *)"incompatible version",/* Z_VERSION_ERROR (-6) */
-    (char *)""
-};
 

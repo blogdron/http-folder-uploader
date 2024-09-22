@@ -1,42 +1,34 @@
-// webserver.c
-// strcasestr
-//#define NO_ZIPFLOW
-#define INCLUDE_ZIPFLOW
-#define INCLUDE_SUNZIP
-#define INCLUDE_ZLIB
-#ifdef INCLUDE_PAGE
-#include "include_page.h"
+#ifdef ENABLE_PAGE
+    #include "page/include_page.h"
 #endif
-#define JUST_DEFLATE
-//#define NO_FORK
-#define NO_LIBC
-#define NO_LOG
 
-#ifndef NO_LIBC
-#define _GNU_SOURCE
-#include <arpa/inet.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <stdarg.h>
-#include <time.h>
-#include <strings.h>
+#ifdef ENABLE_LIBC
+    #define _GNU_SOURCE
+    #include <arpa/inet.h>
+    #include <errno.h>
+    #include <stdio.h>
+    #include <string.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <limits.h>
+    #include <sys/stat.h>
+    #include <stdlib.h>
+    #include <dirent.h>
+    #include <stdarg.h>
+    #include <time.h>
+    #include <strings.h>
+
 #else
-#include "nolibc.h"
+    #include "include/nolibc.h"
 #endif
-#ifndef NO_LOG
-#define Error(...) fprintf(stderr, __VA_ARGS__)
-#define Report(...) fprintf(stderr, __VA_ARGS__)
+
+#ifdef ENABLE_LOG
+    #define Error(...) fprintf(stderr, __VA_ARGS__)
+    #define Report(...) fprintf(stderr, __VA_ARGS__)
 #else
-#define Error(...)
-#define Report(...)
+    #define Error(...)
+    #define Report(...)
 #endif
 
 #define PORT 8080
@@ -50,7 +42,7 @@ typedef struct printbuffer_s
 	size_t sz;
 } printbuffer_t;
 void PB_PrintString( printbuffer_t *pb, const char *fmt, ... );
-#if defined(NO_LIBC) && !defined(NO_LOG)
+#if !defined(ENABLE_LIBC) && defined(ENABLE_LOG)
 static char global_printbuf_buffer[1024];
 static printbuffer_t global_printbuf = {global_printbuf_buffer, 0, 1024};
 #endif
@@ -530,7 +522,7 @@ static void serve_file(const char *path, int newsockfd, const char *mime, int bi
 							"Date: Sat, 11 Nov 2023 21:55:54 GMT\r\n"
 							"Content-Disposition : inline; filename=\"%s\"\r\n\r\n",
 					(int)time(0), (int)sb.st_size, mime, (int)sb.st_size, fname );
-	
+
 	if( fd < 0 ) return;
 
 	writeall(newsockfd, resp, pb.pos );
@@ -881,8 +873,8 @@ static void serve_path_dav(const char *path, int fd)
 	//write(1, resp_dir, len_dir);
 	writeall( fd, resp_buffer, resp.pos );
 }
-#ifndef NO_SUNZIP
-#include "sunzip_integration.h"
+#ifdef ENABLE_SUNZIP
+#include "sunzip/sunzip_integration.h"
 static char sunzip_root[1024];
 static char *sunzip_root_end;
 static size_t sunzip_len, sunzip_pos, sunzip_extralen;
@@ -922,7 +914,7 @@ sunzip_file_out sunzip_openout(const char *filename)
 #endif
 static void SV_PutZip(int fd, const char *path, int clen )
 {
-#ifndef NO_SUNZIP
+#ifdef ENABLE_SUNZIP
 	while(path[0] == '/')path++;
 	sunzip_root_end = &sunzip_root[S_strncpy( sunzip_root, path, 1023 )];
 	sunzip_len = clen;
@@ -978,7 +970,7 @@ static void SV_Put(int newsockfd, const char *uri, int clen )
 		return;
 	}
 	if(strncmp(path, "/files/", 7) || strstr(path, ".."))
-#ifndef NO_FORK
+#ifdef ENABLE_FORK
 		_exit(1);
 #else
 		return;
@@ -1123,7 +1115,7 @@ static void SV_PostUpload(int fd, const char *uri, int clen, const char *boundar
 	}
 }
 
-#include "zipflow.h"
+#include "zipflow/zipflow.h"
 #if 0
 
 void SV_ZipFlow( ZIP *zip, const char *path, int fd )
@@ -1179,7 +1171,8 @@ void SV_ZipFlow( ZIP *zip, const char *path, int fd )
 
 static int zflow_write(void *fd, const void *ptr, size_t len)
 {
-	return writeall((int)fd,ptr,len) != len;
+//	return writeall((int)fd,ptr,len) != len;
+	return writeall(*(int*)fd,ptr,len) != len;
 }
 
 int main(int argc, char **argv, char **envp) {
@@ -1274,7 +1267,7 @@ int main(int argc, char **argv, char **envp) {
 		if(!strcmp(method,"PUT"))
 		{
 			int r = 0;
-#ifndef NO_FORK
+#ifdef ENABLE_FORK
 			r = fork();
 #endif
 			if(r == 0) // child, copy the file
@@ -1297,7 +1290,7 @@ int main(int argc, char **argv, char **envp) {
 						SV_Put( newsockfd, uri, 0 );
 				}
 				close(newsockfd);
-#ifndef NO_FORK
+#ifdef ENABLE_FORK
 				_exit(0);
 #endif
 			}
@@ -1315,7 +1308,7 @@ int main(int argc, char **argv, char **envp) {
 		else if(!strcmp(method,"POST"))
 		{
 			int r = 0;
-#ifndef NO_FORK
+#ifdef ENABLE_FORK
 			r = fork();
 #endif
 			if(r == 0) // child, copy the file
@@ -1333,7 +1326,7 @@ int main(int argc, char **argv, char **envp) {
 
 
 				close(newsockfd);
-#ifndef NO_FORK
+#ifdef ENABLE_FORK
 				_exit(0);
 #endif
 			}
@@ -1382,9 +1375,10 @@ int main(int argc, char **argv, char **envp) {
 			}
 			else if(!strncmp(path, "/zip/", 5))
 			{
-#ifndef NO_ZIPFLOW
-				ZIP *zip = zip_pipe( (void*)newsockfd, zflow_write, 1 );
-				char *p;
+#ifdef ENABLE_ZIPFLOW
+//				ZIP *zip = zip_pipe( (void*)newsockfd, zflow_write, 1 );
+				ZIP *zip = zip_pipe( (void*)&newsockfd, zflow_write, 1 );
+                char *p;
 				path += 5;
 				p = strrchr( path, '.' );
 				if(p)*p = 0;
@@ -1398,7 +1392,7 @@ int main(int argc, char **argv, char **envp) {
 				//SV_ZipFlow( zip, path, newsockfd );
 				zip_entry( zip, path );
 				zip_close( zip );
-				fclose(f);
+				//fclose(f);//XXX what is?
 #endif
 			}
 			else if(!strcmp(path, "/indexredir"))
@@ -1415,7 +1409,7 @@ int main(int argc, char **argv, char **envp) {
 			}
 			else if(strncmp(path, "/files/", 7))
 			{
-#ifdef INCLUDE_PAGE
+#ifdef ENABLE_PAGE
 				WriteStringLit(newsockfd, "HTTP/1.1 200 OK\r\n"
 										  "Server: webserver-c\r\n"
 										  "Content-type: text/html\r\n\r\n");
@@ -1427,7 +1421,7 @@ int main(int argc, char **argv, char **envp) {
 			else
 			{
 				int r = 0;
-#ifndef NO_FORK
+#ifdef ENABLE_FORK
 				r =fork();
 #endif
 				if( r == 0 )
@@ -1467,7 +1461,7 @@ int main(int argc, char **argv, char **envp) {
 			//usleep(15000);
 
 			RB_Dump( 1, clen );
-			
+
 			if(strncmp(path, "/files/", 7) || strstr(path, ".."))
 			{
 				close(newsockfd);
@@ -1638,7 +1632,7 @@ int main(int argc, char **argv, char **envp) {
 
 			PB_Init( &lb, lock_body, 1024 );
 			PB_Init( &lh, lock_headers, 512 );
-			PB_PrintString( &lb, 
+			PB_PrintString( &lb,
 			"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			"<D:prop xmlns:D=\"DAV:\"><D:lockdiscovery><D:activelock>"
 			"<D:locktoken><D:href>%s</D:href></D:locktoken>"
@@ -1660,7 +1654,7 @@ int main(int argc, char **argv, char **envp) {
 									  "Server: webserver-c\r\n"
 									  "Content-type: application/xml\r\n\r\n");
 			close(newsockfd);
-		
+
 		}
 		else
 		{
@@ -1673,25 +1667,25 @@ int main(int argc, char **argv, char **envp) {
 	return 0;
 }
 #define OF(x) x
-#ifdef INCLUDE_SUNZIP
-#include "sunzip.c"
+#ifdef ENABLE_SUNZIP
+//#include "sunzip/sunzip.c"
 #undef local
 #undef CHUNK
-#include "zlib/infback.c"
+//#include "zlib/infback.c"
 #undef PULLBYTE
-#include "zlib/inffast.c"
-#include "zlib/inflate.c"
-#include "zlib/inftrees.c"
+//#include "zlib/inffast.c"
+//#include "zlib/inflate.c"
+//#include "zlib/inftrees.c"
 #endif
-#ifdef INCLUDE_ZIPFLOW
+#ifdef ENABLE_ZIPFLOW
 //#undef local
 #define warn(f,...) printf(f"\n",__VA_ARGS__)
-#include "zipflow.c"
-#include "zlib/deflate.c"
-#include "zlib/trees.c"
-#include "zlib/adler32.c"
+//#include "zipflow.c"
+//#include "zlib/deflate.c"
+//#include "zlib/trees.c"
+//#include "zlib/adler32.c"
 #endif
-#if defined INCLUDE_SUNZIP || defined INCLUDE_ZIPFLOW
+#if defined ENABLE_SUNZIP || defined ENABLE_ZIPFLOW
 #undef word
-#include "zlib/crc32.c"
+//#include "zlib/crc32.c"
 #endif

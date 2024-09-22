@@ -12,6 +12,7 @@
 #include <time.h>
 #include <limits.h>
 #include <assert.h>
+#include <fcntl.h>
 #include "zlib.h"
 #include "zipflow.h"
 

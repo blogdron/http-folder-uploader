@@ -107,6 +107,7 @@
 // in the resulting zip file. The small constant is 64 to 72 bytes plus the
 // null termination and allocation overhead for the file name.
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdint.h>
 typedef void ZIP;           // opaque structure for zip streaming operations
