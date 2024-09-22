@@ -1,0 +1,50 @@
+-------------------------------------
+- Bultd Variants Statuse
+-------------------------------------
+
+* [yes]
+  * ENABLLE_PAGE    = 1
+  * ENABLLE_ZLIB    = 1
+  * ENABLLE_SUNZIP  = 1
+  * ENABLLE_ZIPFLOW = 1
+  * ENABLLE_LIBC    = 1
+  * ENABLLE_LOG     = 0
+  * ENABLLE_FORK    = 1
+* [nop]
+  * ENABLLE_PAGE    = 1
+  * ENABLLE_ZLIB    = 1
+  * ENABLLE_SUNZIP  = 1
+  * ENABLLE_ZIPFLOW = 1
+  * ENABLLE_LIBC    = 0
+  * ENABLLE_LOG     = 0
+  * ENABLLE_FORK    = 1
+-------------------------------------
+- Web interface Firefox115 ESR Client
+-------------------------------------
+* [yes] connect to http://192.168.0.100
+* [yes] list pwd dir files
+* [yes] upload file
+* [yes] upload dir
+* [yes] upload unpacked zip
+* [yes] move file
+* [yes] delete file
+* [yes] download file
+* [yes] download zipped dir
+* [yes] create dir
+* [yes] create file
+* [yes] create file with text data
+-------------------------------------
+- Webdav interface Windows 7 Client
+-------------------------------------
+* [yes] connect
+* [nop] list pwd dir files
+* [???] create file
+* [???] delete file
+* [???] upload file
+* [???] download file
+* [???] create dir
+* [???] delete dir
+* [???] upload dir
+* [???] download dir
+-------------------------------------
+
