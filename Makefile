@@ -74,6 +74,6 @@ test:all
 	mkdir -p  jail
 	cp $(APP) jail
 	touch jail/itworks.txt
-	firejail --private=jail ./$(APP)
+	firejail --private=jail ./$(APP) $(PWD)
 
 .SILENT: clean
