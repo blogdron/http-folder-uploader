@@ -41,7 +41,9 @@
 * [yes] create file
 * [yes] create file with text data
 -------------------------------------
-- Webdav interface Windows 7 Client ENABLE_PAGE = 1
+- Webdav interface Windows 7 Client
+  http://192.168.0.100:8080/
+  http://192.168.0.100:8080/list
 -------------------------------------
 * [yes] connect
 * [nop] list pwd dir files
@@ -58,7 +60,8 @@
 * [???] upload dir
 * [???] download dir
 -------------------------------------
-- Webdav interface Windows 7 Client ENABLE_PAGE = 0
+- Webdav interface Windows 7 Client
+  http://192.168.0.100:8080/files/
 -------------------------------------
 * [yes] connect
 * [yes] list pwd dir files
