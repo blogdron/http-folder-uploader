@@ -1582,6 +1582,10 @@ int main(int argc, char **argv, char **envp) {
 				writeall(newsockfd, resp_auth, sizeof(resp_auth) - 1);
 				close(newsockfd);
 			}*/
+            if(path[0]=='/' && path[1] == '\0')
+            {
+               path="/files";
+            }
 			if(strncmp(path, "/files", 6) || strstr(path, ".."))
 			{
 				serve_path_dav("", newsockfd);
