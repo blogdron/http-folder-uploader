@@ -42,8 +42,9 @@
 * [yes] create file with text data
 -------------------------------------
 - Webdav interface Windows 7 Client
-  http://192.168.0.100:8080/
-  http://192.168.0.100:8080/list
+  http://192.168.0.100:8080/if_shis_path_not_handled
+  TODO : Need disconnect if path not handled
+       : Need reset any unhandled path to /files/ as alias curent PWD server path
 -------------------------------------
 * [yes] connect
 * [nop] list pwd dir files (but if copy files with same name win7 send notice about file replace)
@@ -69,6 +70,7 @@ connection accepted
 -------------------------------------
 - Webdav interface Windows 7 Client
   http://192.168.0.100:8080/files/
+  http://192.168.0.100:8080/
 -------------------------------------
 * [yes] connect
 * [yes] list pwd dir files
