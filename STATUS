@@ -1,9 +1,16 @@
 -------------------------------------
 - Bultd Variants Statuse
 -------------------------------------
-
 * [yes]
   * ENABLLE_PAGE    = 1
+  * ENABLLE_ZLIB    = 1
+  * ENABLLE_SUNZIP  = 1
+  * ENABLLE_ZIPFLOW = 1
+  * ENABLLE_LIBC    = 1
+  * ENABLLE_LOG     = 0
+  * ENABLLE_FORK    = 1
+* [yes]
+  * ENABLLE_PAGE    = 0
   * ENABLLE_ZLIB    = 1
   * ENABLLE_SUNZIP  = 1
   * ENABLLE_ZIPFLOW = 1
@@ -34,17 +41,38 @@
 * [yes] create file
 * [yes] create file with text data
 -------------------------------------
-- Webdav interface Windows 7 Client
+- Webdav interface Windows 7 Client ENABLE_PAGE = 1
 -------------------------------------
 * [yes] connect
 * [nop] list pwd dir files
 * [???] create file
+* [???] rename file
+* [???] read exists file
+* [???] write to exists file
 * [???] delete file
 * [???] upload file
 * [???] download file
 * [???] create dir
+* [???] rename dir
 * [???] delete dir
 * [???] upload dir
 * [???] download dir
+-------------------------------------
+- Webdav interface Windows 7 Client ENABLE_PAGE = 0
+-------------------------------------
+* [yes] connect
+* [yes] list pwd dir files
+* [yes] create file (set name filed)
+* [nop] rename file
+* [yes] read exists file
+* [yes] write to exists file
+* [yes] delete file
+* [yes] upload file
+* [yes] download file
+* [yes] create dir
+* [nop] rename dir
+* [nop] delete dir
+* [yes] upload dir
+* [yes] download dir
 -------------------------------------
 

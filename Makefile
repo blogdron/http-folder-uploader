@@ -70,7 +70,7 @@ clean:
 	-rm $(LIB)
 	-rm -rd jail
 
-test:
+test:all
 	mkdir -p  jail
 	cp $(APP) jail
 	touch jail/itworks.txt

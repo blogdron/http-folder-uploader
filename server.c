@@ -1666,26 +1666,21 @@ int main(int argc, char **argv, char **envp) {
 	close(sockfd);
 	return 0;
 }
+/*
 #define OF(x) x
 #ifdef ENABLE_SUNZIP
 //#include "sunzip/sunzip.c"
-#undef local
-#undef CHUNK
-//#include "zlib/infback.c"
-#undef PULLBYTE
-//#include "zlib/inffast.c"
-//#include "zlib/inflate.c"
-//#include "zlib/inftrees.c"
+   #undef local
+   #undef CHUNK
+   //#include "zlib/infback.c"
+   #undef PULLBYTE
+   //#include "zlib/inffast.c"
+   //#include "zlib/inflate.c"
+   //#include "zlib/inftrees.c"
 #endif
+
 #ifdef ENABLE_ZIPFLOW
-//#undef local
-#define warn(f,...) printf(f"\n",__VA_ARGS__)
-//#include "zipflow.c"
-//#include "zlib/deflate.c"
-//#include "zlib/trees.c"
-//#include "zlib/adler32.c"
+   //#undef local
+   #define warn(f,...) printf(f"\n",__VA_ARGS__)
 #endif
-#if defined ENABLE_SUNZIP || defined ENABLE_ZIPFLOW
-#undef word
-//#include "zlib/crc32.c"
-#endif
+*/
