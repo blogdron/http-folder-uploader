@@ -46,8 +46,15 @@
   http://192.168.0.100:8080/list
 -------------------------------------
 * [yes] connect
-* [nop] list pwd dir files
-* [???] create file
+* [nop] list pwd dir files (but if copy files with same name win7 send notice about file replace)
+* [nop] create file (in while cycle trying create file)
+-------------------------------------------------------
+...
+[192.168.0.100:8080] PROPFIND /%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%20(787).txt
+connection accepted
+[192.168.0.100:8080] PROPFIND /%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%20(788).txt
+...
+-------------------------------------------------------
 * [???] rename file
 * [???] read exists file
 * [???] write to exists file
